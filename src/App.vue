@@ -7,17 +7,26 @@
           {{ dot.pointNumber }} - {{ dot.coordinateX }};{{ dot.coordinateY }}
         </p>
       </div>
+      <button v-if="isSetInput" @click="isSetInput = false">
+        Задать входные данные
+      </button>
+      <add-dots v-else />
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import AddDots from "./components/AddDots.vue";
 export default {
   name: "App",
+  components: {
+    AddDots,
+  },
   data() {
     return {
       dots: [],
+      isSetInput: true,
     };
   },
   mounted() {
