@@ -3,10 +3,6 @@
     <div>
       <h2>Выходные данные:</h2>
       <div v-for="(dot, index) in dots" :key="index">
-        <p>{{ index + 1 }} - {{ dot }}</p>
-      </div>
-      <button @click="sort">Sort</button>
-      <div v-for="(dot, index) in dotsSort" :key="index">
         <p>
           {{ dot.pointNumber }} - {{ dot.coordinateX }};{{ dot.coordinateY }}
         </p>
@@ -22,7 +18,6 @@ export default {
   data() {
     return {
       dots: [],
-      dotsSort: [],
     };
   },
   mounted() {
@@ -33,41 +28,28 @@ export default {
       axios
         .get("http://localhost:3000/dots")
         .then((response) => {
-          this.dots = response.data;
+          this.sort(response.data);
         })
         .catch((error) => {
           console.log(error);
         })
         .finally(() => console.log("Метод завершен"));
     },
-    sort() {
-      for (let i in this.dots) {
-        let dot1 = {
-          pointNumber: null,
-          coordinateX: null,
-          coordinateY: null,
-        };
+    sort(arr) {
+      this.dots = arr.map((name, index) => {
+        let dot = {},
+          arrDot = name.split(";");
+        dot.pointNumber = index + 1;
+        dot.coordinateX = parseInt(arrDot[0]);
+        dot.coordinateY = parseInt(arrDot[1]);
+        return dot;
+      });
 
-        let o = this.dots[i].split(";");
-
-        dot1.pointNumber = parseInt(i) + 1;
-        dot1.coordinateX = parseInt(o[0]);
-        dot1.coordinateY = parseInt(o[1]);
-        this.dotsSort.push(dot1);
-      }
-      this.dotsSort.sort((a, b) => {
-        if (a.coordinateX > b.coordinateX) {
-          return 1;
-        }
-        if (a.coordinateX < b.coordinateX) {
-          return -1;
-        }
-        if (a.coordinateY > b.coordinateY) {
-          return -1;
-        }
-        if (a.coordinateY < b.coordinateY) {
-          return 1;
-        }
+      this.dots.sort((a, b) => {
+        if (a.coordinateX > b.coordinateX) return 1;
+        if (a.coordinateX < b.coordinateX) return -1;
+        if (a.coordinateY > b.coordinateY) return -1;
+        if (a.coordinateY < b.coordinateY) return 1;
         return 0;
       });
     },
