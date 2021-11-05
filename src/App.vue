@@ -26,6 +26,16 @@
     <div class="canvas">
       <h2>Рисунок с выходными данными:</h2>
       <canvas id="canvas" width="1654" height="1000" ref="canvas"></canvas>
+      <div class="picture-scale">
+        <label>Маштаб рисунка: 1:{{ currentScale }}</label>
+        <input
+          class="input-range"
+          type="range"
+          v-model="currentScale"
+          :min="pictureScale.minScale"
+          :max="pictureScale.maxScale"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -42,11 +52,22 @@ export default {
     return {
       dots: [],
       isSetInput: true,
+      pictureScale: {
+        minScale: 1,
+        maxScale: 300,
+      },
+      currentScale: 150,
     };
   },
   mounted() {
     this.readInputData();
   },
+  watch: {
+    currentScale() {
+      this.renderingOutput();
+    },
+  },
+
   methods: {
     readInputData() {
       axios
@@ -101,7 +122,7 @@ export default {
       let ctx = cvn.getContext("2d");
       ctx.clearRect(0, 0, cvn.width, cvn.height);
 
-      let scale = 70;
+      let scale = this.currentScale;
 
       ctx.beginPath();
       ctx.strokeStyle = "green";
@@ -172,6 +193,7 @@ body {
 .canvas {
   width: 68%;
   height: 600px;
+  position: relative;
 }
 #canvas {
   width: 100%;
@@ -179,6 +201,9 @@ body {
   background: #efefef;
   border: 1px solid #dddddd;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.input-range {
+  padding: 0;
 }
 h2 {
   text-align: center;
@@ -222,5 +247,11 @@ tr:nth-child(even) {
     background-color: #504afd;
     box-shadow: 0 0 10px rgba(0, 38, 255, 0.5);
   }
+}
+.picture-scale {
+  width: 300px;
+  position: absolute;
+  bottom: 40px;
+  left: calc(calc(100% - 300px) / 2);
 }
 </style>

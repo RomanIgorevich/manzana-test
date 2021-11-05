@@ -2,7 +2,7 @@
   <div class="dots-data">
     <h2>Входные данные:</h2>
     <form @click.prevent>
-      <div class="dot" v-for="dot in dotsInput" :key="dot.dotNumber">
+      <div class="dot" v-for="(dot, index) in dotsInput" :key="index">
         <h3>Точка № {{ dot.dotNumber }}</h3>
         <div class="wrapper">
           <label :for="dot.labelX">{{ dot.labelX }}</label>
