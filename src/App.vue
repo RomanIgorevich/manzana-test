@@ -25,7 +25,7 @@
     <add-dots v-else @process="process" />
     <div class="canvas">
       <h2>Рисунок с выходными данными:</h2>
-      <canvas id="canvas" ref="canvas"></canvas>
+      <canvas id="canvas" width="1654" height="1000" ref="canvas"></canvas>
     </div>
   </div>
 </template>
@@ -42,7 +42,6 @@ export default {
     return {
       dots: [],
       isSetInput: true,
-      dotsJson: [],
     };
   },
   mounted() {
@@ -53,15 +52,14 @@ export default {
       axios
         .get("http://localhost:3000/dots")
         .then((response) => {
-          this.sort(response.data);
-          this.dotsJson = response.data;
+          this.transformation(response.data);
         })
         .catch((error) => {
           console.log(error);
         })
         .finally(() => console.log("Метод завершен"));
     },
-    sort(arr) {
+    transformation(arr) {
       this.dots = arr.map((name, index) => {
         let dot = {},
           arrDot = name.split(";");
@@ -70,7 +68,9 @@ export default {
         dot.coordinateY = parseInt(arrDot[1]);
         return dot;
       });
-
+      this.sort();
+    },
+    sort() {
       this.dots.sort((a, b) => {
         if (a.coordinateX > b.coordinateX) return 1;
         if (a.coordinateX < b.coordinateX) return -1;
@@ -78,12 +78,39 @@ export default {
         if (a.coordinateY < b.coordinateY) return 1;
         return 0;
       });
+      this.renderingOutput();
     },
-    //два массива
-    process(arrNewDots) {
-      let ar = [...this.dotsJson, ...arrNewDots];
-      this.sort(ar);
-      this.isSetInput = true;
+    renderingOutput() {
+      let cvn = this.$refs.canvas;
+      let ctx = cvn.getContext("2d");
+
+      let scale = 70;
+
+      ctx.beginPath();
+      ctx.strokeStyle = "green";
+      ctx.font = "30px Arial";
+      ctx.textAlign = "left";
+      ctx.textBaseline = "top";
+
+      for (let i = 0; i < this.dots.length; i++) {
+        ctx.lineTo(
+          this.dots[i].coordinateX * scale,
+          this.dots[i].coordinateY * scale
+        );
+        ctx.fillRect(
+          this.dots[i].coordinateX * scale,
+          this.dots[i].coordinateY * scale,
+          3 * 3,
+          3 * 3
+        );
+        ctx.fillText(
+          `${this.dots[i].pointNumber}(${this.dots[i].coordinateX};${this.dots[i].coordinateY})`,
+          this.dots[i].coordinateX * scale + 10,
+          this.dots[i].coordinateY * scale + 10
+        );
+      }
+      ctx.stroke();
+      ctx.closePath();
     },
   },
 };
