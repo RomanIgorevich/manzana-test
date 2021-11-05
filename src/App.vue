@@ -83,6 +83,7 @@ export default {
     renderingOutput() {
       let cvn = this.$refs.canvas;
       let ctx = cvn.getContext("2d");
+      ctx.clearRect(0, 0, cvn.width, cvn.height);
 
       let scale = 70;
 
@@ -111,6 +112,13 @@ export default {
       }
       ctx.stroke();
       ctx.closePath();
+    },
+    process(arr) {
+      this.dots = arr;
+      this.sort();
+      this.isSetInput = true;
+      this.renderingOutput();
+      console.log(this.dots);
     },
   },
 };

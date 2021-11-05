@@ -11,6 +11,7 @@
             :id="dot.labelX"
             :placeholder="dot.placeholderX"
             v-model="dot.valueX"
+            @keypress="isNumber($event)"
           />
           <label class="pad-l16px" :for="dot.labelY">{{ dot.labelY }}</label>
           <input
@@ -18,6 +19,7 @@
             :id="dot.labelY"
             :placeholder="dot.placeholderY"
             v-model="dot.valueY"
+            @keypress="isNumber($event)"
           />
         </div>
       </div>
@@ -46,27 +48,48 @@ export default {
   },
   methods: {
     addDot() {
-      this.dotsInput.push({
-        dotNumber: this.dotsInput.length + 1,
-        labelX: "Х:",
-        placeholderX: "Введите x...",
-        valueX: this.value,
-        labelY: "Y:",
-        placeholderY: "Введите у...",
-        valueY: this.value,
-      });
+      if (
+        this.dotsInput[this.dotsInput.length - 1].valueX != null &&
+        this.dotsInput[this.dotsInput.length - 1].valueY != null
+      ) {
+        this.dotsInput.push({
+          dotNumber: this.dotsInput.length + 1,
+          labelX: "Х:",
+          placeholderX: "Введите x...",
+          valueX: this.value,
+          labelY: "Y:",
+          placeholderY: "Введите у...",
+          valueY: this.value,
+        });
+      }
     },
     process() {
       let arrNewDots = this.dotsInput
         .filter((item) => {
-          return item.valueX != undefined && item.valueY != undefined;
+          return (
+            item.valueX != undefined &&
+            item.valueY != undefined &&
+            item.valueX == parseInt(item.valueX) &&
+            item.valueY == parseInt(item.valueY)
+          );
         })
-        .map((item) => {
-          return item.valueX + ";" + item.valueY;
+        .map((item, index) => {
+          let dot = {};
+          dot.pointNumber = index + 1;
+          dot.coordinateX = parseInt(item.valueX);
+          dot.coordinateY = parseInt(item.valueY);
+          return dot;
         });
       this.$emit("process", arrNewDots);
-      this.dotsInput.splice(1);
-      console.log(this.dotsInput);
+    },
+    isNumber(event) {
+      event = event ? event : window.event;
+      var charCode = event.which ? event.which : event.keyCode;
+      if (charCode < 48 || charCode > 57) {
+        event.preventDefault();
+      } else {
+        return true;
+      }
     },
   },
 };
