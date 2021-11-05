@@ -1,16 +1,31 @@
 <template>
   <div class="container">
-    <div>
+    <div class="dots-data">
       <h2>Выходные данные:</h2>
-      <div v-for="(dot, index) in dots" :key="index">
-        <p>
-          {{ dot.pointNumber }} - {{ dot.coordinateX }};{{ dot.coordinateY }}
-        </p>
-      </div>
-      <button v-if="isSetInput" @click="isSetInput = false">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>№ точки</th>
+            <th>Координата X</th>
+            <th>Координата Y</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(dot, index) in dots" :key="index">
+            <td>{{ dot.pointNumber }}</td>
+            <td>{{ dot.coordinateX }}</td>
+            <td>{{ dot.coordinateY }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <button v-if="isSetInput" @click="isSetInput = false" class="btn">
         Задать входные данные
       </button>
-      <add-dots  v-else @process="process" />
+      <add-dots v-else @process="process" />
+    </div>
+    <div class="canvas">
+      <h2>Рисунок с выходными данными:</h2>
+      <canvas id="canvas" ref="canvas"></canvas>
     </div>
   </div>
 </template>
@@ -27,7 +42,7 @@ export default {
     return {
       dots: [],
       isSetInput: true,
-      dotsJson:[]
+      dotsJson: [],
     };
   },
   mounted() {
@@ -39,7 +54,7 @@ export default {
         .get("http://localhost:3000/dots")
         .then((response) => {
           this.sort(response.data);
-          this.dotsJson =response.data
+          this.dotsJson = response.data;
         })
         .catch((error) => {
           console.log(error);
@@ -66,31 +81,95 @@ export default {
     },
     //два массива
     process(arrNewDots) {
-      let ar = [...this.dotsJson, ...arrNewDots]
+      let ar = [...this.dotsJson, ...arrNewDots];
       this.sort(ar);
-      this.isSetInput = true
+      this.isSetInput = true;
     },
   },
 };
 </script>
 
 <style lang="scss">
+@import url("https://fonts.googleapis.com/css2?family=Noto+Serif");
 * {
   box-sizing: border-box;
-  background: #fff;
   margin: 0;
   padding: 0;
 }
 body {
-  font-family: "PT Serif", serif;
+  font-family: "Noto Serif", serif;
   font-weight: 400;
-  font-size: 14px;
-  line-height: 18px;
+  font-size: 16px;
+  line-height: 1.5;
+  background: #f7f7f7;
   color: #5e5e5e;
 }
 .container {
-  max-width: 1170px;
+  max-width: 1248px;
   margin: 0 auto;
-  padding: 0 15px;
+  padding: 32px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+.dots-data {
+  width: 28%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.canvas {
+  width: 68%;
+  height: 600px;
+}
+#canvas {
+  width: 100%;
+  height: 500px;
+  background: #efefef;
+  border: 1px solid #dddddd;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+h2 {
+  text-align: center;
+  margin-bottom: 24px;
+}
+.table {
+  width: 100%;
+  margin-bottom: 32px;
+  border: 1px solid #dddddd;
+  border-collapse: collapse;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+.table th {
+  font-weight: bold;
+  padding: 5px;
+  background: #e6e6e6;
+  border: 1px solid #dddddd;
+}
+.table td {
+  border: 1px solid #dddddd;
+  padding: 5px;
+  text-align: center;
+}
+tr:nth-child(even) {
+  background-color: #efefef;
+}
+.btn {
+  font-family: "Noto Serif", serif;
+  font-size: 16px;
+  display: inline-block;
+  padding: 0.8em 2em;
+  line-height: 1;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 10px;
+  margin: 32px 0;
+  color: #ffffff;
+  background-color: #807cff;
+  border: 1px solid #ddd;
+  &:hover {
+    background-color: #504afd;
+    box-shadow: 0 0 10px rgba(0, 38, 255, 0.5);
+  }
 }
 </style>
