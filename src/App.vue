@@ -78,6 +78,22 @@ export default {
         if (a.coordinateY < b.coordinateY) return 1;
         return 0;
       });
+      this.removeDuplicates();
+    },
+    removeDuplicates() {
+      this.dots = this.dots.filter((item, index, array) => {
+        if (index != array.length - 1) {
+          return !(
+            item.coordinateX == array[index + 1].coordinateX &&
+            item.coordinateY == array[index + 1].coordinateY
+          );
+        } else {
+          return !(
+            item.coordinateX == array[index - 1].coordinateX &&
+            item.coordinateY == array[index - 1].coordinateY
+          );
+        }
+      });
       this.renderingOutput();
     },
     renderingOutput() {
@@ -116,9 +132,9 @@ export default {
     process(arr) {
       this.dots = arr;
       this.sort();
+      this.removeDuplicates();
       this.isSetInput = true;
       this.renderingOutput();
-      console.log(this.dots);
     },
   },
 };
