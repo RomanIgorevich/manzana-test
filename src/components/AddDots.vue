@@ -22,9 +22,7 @@
         </div>
       </div>
       <button @click="addDot">Добавить точку</button>
-      <div v-for="dot in dotsInput" :key="dot">
-        <p>{{dot.dotNumber}}-{{ dot.valueX }};{{dot.valueY}}</p>
-      </div>
+      <button @click="process">Oбработать</button>
     </form>
   </div>
 </template>
@@ -38,10 +36,10 @@ export default {
           dotNumber: 1,
           labelX: "Координата Х:",
           placeholderX: "Введите x...",
-          valueX: "",
+          valueX: null,
           labelY: "Координата Y:",
           placeholderY: "Введите у...",
-          valueY: "",
+          valueY: null,
         },
       ],
     };
@@ -57,6 +55,18 @@ export default {
         placeholderY: "Введите у...",
         valueY: this.value,
       });
+    },
+    process() {
+      let arrNewDots = this.dotsInput
+        .filter((item) => {
+          return item.valueX != undefined && item.valueY != undefined;
+        })
+        .map((item) => {
+          return item.valueX + ";" + item.valueY;
+        });
+      this.$emit("process", arrNewDots);
+      this.dotsInput.splice(1)
+      console.log(this.dotsInput)
     },
   },
 };

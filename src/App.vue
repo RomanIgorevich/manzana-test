@@ -10,7 +10,7 @@
       <button v-if="isSetInput" @click="isSetInput = false">
         Задать входные данные
       </button>
-      <add-dots v-else />
+      <add-dots  v-else @process="process" />
     </div>
   </div>
 </template>
@@ -27,6 +27,7 @@ export default {
     return {
       dots: [],
       isSetInput: true,
+      dotsJson:[]
     };
   },
   mounted() {
@@ -38,6 +39,7 @@ export default {
         .get("http://localhost:3000/dots")
         .then((response) => {
           this.sort(response.data);
+          this.dotsJson =response.data
         })
         .catch((error) => {
           console.log(error);
@@ -61,6 +63,12 @@ export default {
         if (a.coordinateY < b.coordinateY) return 1;
         return 0;
       });
+    },
+    //два массива
+    process(arrNewDots) {
+      let ar = [...this.dotsJson, ...arrNewDots]
+      this.sort(ar);
+      this.isSetInput = true
     },
   },
 };
