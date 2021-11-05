@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <div class="dots-data">
+    <div class="dots-data" v-if="isSetInput">
       <h2>Выходные данные:</h2>
       <table class="table">
         <thead>
@@ -18,11 +18,11 @@
           </tr>
         </tbody>
       </table>
-      <button v-if="isSetInput" @click="isSetInput = false" class="btn">
+      <button @click="isSetInput = false" class="btn">
         Задать входные данные
       </button>
-      <add-dots v-else @process="process" />
     </div>
+    <add-dots v-else @process="process" />
     <div class="canvas">
       <h2>Рисунок с выходными данными:</h2>
       <canvas id="canvas" ref="canvas"></canvas>
@@ -163,7 +163,7 @@ tr:nth-child(even) {
   text-transform: uppercase;
   cursor: pointer;
   border-radius: 10px;
-  margin: 32px 0;
+  margin: 16px 0;
   color: #ffffff;
   background-color: #807cff;
   border: 1px solid #ddd;

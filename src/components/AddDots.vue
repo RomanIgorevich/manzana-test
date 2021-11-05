@@ -1,10 +1,10 @@
 <template>
-  <div>
+  <div class="dots-data">
     <h2>Входные данные:</h2>
     <form @click.prevent>
-      <div v-for="dot in dotsInput" :key="dot">
-        <div>
-          <h3>Точка № {{ dot.dotNumber }}</h3>
+      <div class="dot" v-for="dot in dotsInput" :key="dot">
+        <h3>Точка № {{ dot.dotNumber }}</h3>
+        <div class="wrapper">
           <label :for="dot.labelX">{{ dot.labelX }}</label>
           <input
             type="text"
@@ -12,7 +12,7 @@
             :placeholder="dot.placeholderX"
             v-model="dot.valueX"
           />
-          <label :for="dot.labelY">{{ dot.labelY }}</label>
+          <label class="pad-l16px" :for="dot.labelY">{{ dot.labelY }}</label>
           <input
             type="text"
             :id="dot.labelY"
@@ -21,8 +21,8 @@
           />
         </div>
       </div>
-      <button @click="addDot">Добавить точку</button>
-      <button @click="process">Oбработать</button>
+      <button class="btn" @click="addDot">Добавить точку</button>
+      <button class="btn" @click="process">Oбработать</button>
     </form>
   </div>
 </template>
@@ -34,10 +34,10 @@ export default {
       dotsInput: [
         {
           dotNumber: 1,
-          labelX: "Координата Х:",
+          labelX: "Х:",
           placeholderX: "Введите x...",
           valueX: null,
-          labelY: "Координата Y:",
+          labelY: "Y:",
           placeholderY: "Введите у...",
           valueY: null,
         },
@@ -48,10 +48,10 @@ export default {
     addDot() {
       this.dotsInput.push({
         dotNumber: this.dotsInput.length + 1,
-        labelX: "Координата Х:",
+        labelX: "Х:",
         placeholderX: "Введите x...",
         valueX: this.value,
-        labelY: "Координата Y:",
+        labelY: "Y:",
         placeholderY: "Введите у...",
         valueY: this.value,
       });
@@ -65,9 +65,45 @@ export default {
           return item.valueX + ";" + item.valueY;
         });
       this.$emit("process", arrNewDots);
-      this.dotsInput.splice(1)
-      console.log(this.dotsInput)
+      this.dotsInput.splice(1);
+      console.log(this.dotsInput);
     },
   },
 };
 </script>
+
+<style lang="scss">
+h3 {
+  margin-bottom: 8px;
+}
+form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.dot {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  width: 100%;
+  margin-bottom: 24px;
+  padding: 16px;
+}
+.wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+label {
+  margin-right: 16px;
+}
+input {
+  padding: 8px 16px;
+  width: 100%;
+  border: 1px solid #adaeaf;
+  outline: none;
+  border: none;
+}
+.pad-l16px {
+  padding-left: 16px;
+}
+</style>
