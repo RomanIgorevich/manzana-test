@@ -102,19 +102,21 @@ export default {
       this.removeDuplicates();
     },
     removeDuplicates() {
-      this.dots = this.dots.filter((item, index, array) => {
-        if (index != array.length - 1) {
-          return !(
-            item.coordinateX == array[index + 1].coordinateX &&
-            item.coordinateY == array[index + 1].coordinateY
-          );
-        } else {
-          return !(
-            item.coordinateX == array[index - 1].coordinateX &&
-            item.coordinateY == array[index - 1].coordinateY
-          );
-        }
-      });
+      if (this.dots.length > 1) {
+        this.dots = this.dots.filter((item, index, array) => {
+          if (index != array.length - 1) {
+            return !(
+              item.coordinateX == array[index + 1].coordinateX &&
+              item.coordinateY == array[index + 1].coordinateY
+            );
+          } else {
+            return !(
+              item.coordinateX == array[index - 1].coordinateX &&
+              item.coordinateY == array[index - 1].coordinateY
+            );
+          }
+        });
+      }
       this.renderingOutput();
     },
     renderingOutput() {
@@ -153,9 +155,7 @@ export default {
     process(arr) {
       this.dots = arr;
       this.sort();
-      this.removeDuplicates();
       this.isSetInput = true;
-      this.renderingOutput();
     },
   },
 };
