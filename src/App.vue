@@ -27,7 +27,7 @@
       <h2>Рисунок с выходными данными:</h2>
       <canvas id="canvas" width="1654" height="1000" ref="canvas"></canvas>
       <div class="picture-scale">
-        <label>Маштаб рисунка: 1:{{ currentScale }}</label>
+        <label>Масштаб рисунка: 1:{{ currentScale }}</label>
         <input
           class="input-range"
           type="range"
@@ -104,17 +104,15 @@ export default {
     removeDuplicates() {
       if (this.dots.length > 1) {
         this.dots = this.dots.filter((item, index, array) => {
-          if (index != array.length - 1) {
-            return !(
-              item.coordinateX == array[index + 1].coordinateX &&
-              item.coordinateY == array[index + 1].coordinateY
-            );
-          } else {
-            return !(
-              item.coordinateX == array[index - 1].coordinateX &&
-              item.coordinateY == array[index - 1].coordinateY
-            );
-          }
+          return (
+            index ===
+            array.findIndex((element) => {
+              return (
+                element.coordinateX === item.coordinateX &&
+                element.coordinateY === item.coordinateY
+              );
+            })
+          );
         });
       }
       this.renderingOutput();
