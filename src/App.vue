@@ -71,7 +71,10 @@ export default {
   methods: {
     readInputData() {
       axios
-        .get("http://localhost:3000/dots")
+        // .get("http://localhost:3000/dots") json-server
+        .get(
+          "https://raw.githubusercontent.com/RomanIgorevich/manzana-test/master/db.json"
+        ) //github
         .then((response) => {
           this.transformation(response.data);
         })
